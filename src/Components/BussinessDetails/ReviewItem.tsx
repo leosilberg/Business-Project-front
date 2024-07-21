@@ -1,10 +1,16 @@
-import { Heart, HeartOff } from "lucide-react";
+import { Heart, HeartOff, Star } from "lucide-react";
 import { BussinessI, ReviewProps } from "../../Types/Businesses.types";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { useAuth } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function ReviewLayout(props: ReviewProps) {
+function ReviewItem(props: ReviewProps) {
   const { curReview, setBussiness } = props;
   const { loggedInUser, likeReview, dislikeReview } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +21,8 @@ function ReviewLayout(props: ReviewProps) {
     if (!loggedInUser) return navigate("/auth");
     try {
       // update review, bussiness
-      setBussiness((prev: BussinessI) => {
+      setBussiness((prev: BussinessI | null | undefined) => {
+        if (!prev) return;
         return {
           ...prev,
           reviews: prev.reviews.map((review) =>
@@ -34,7 +41,8 @@ function ReviewLayout(props: ReviewProps) {
     if (!loggedInUser) return navigate("/auth");
     try {
       // update review, bussiness
-      setBussiness((prev: BussinessI) => {
+      setBussiness((prev: BussinessI | null | undefined) => {
+        if (!prev) return;
         return {
           ...prev,
           reviews: prev.reviews.map((review) =>
@@ -84,9 +92,12 @@ function ReviewLayout(props: ReviewProps) {
           </div>
         </div>
         <CardDescription>{curReview.description}</CardDescription>
+          <div className=" flex text-[#fff700] font-semibold items-center gap-1">
+            {curReview.rating} <Star size={16} color="#fff700" />
+          </div>
       </CardHeader>
     </Card>
   );
 }
 
-export default ReviewLayout;
+export default ReviewItem;

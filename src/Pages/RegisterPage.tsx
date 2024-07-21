@@ -5,12 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { IconInput, Input } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
+import { RegisteredUserI } from "../Types/UserAndAuth.types";
 
 function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [displayPassword, setDisplayPassword] = useState(false);
-  const [newUser, setNewUser] = useState({
+  const [newUser, setNewUser] = useState<RegisteredUserI>({
     username: "",
     email: "",
     password: "",

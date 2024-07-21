@@ -1,20 +1,10 @@
-export interface BussinessAddressI {
-  district: string;
-  city: string;
-  street: string;
-}
-
-export interface BussinessContactI {
-  phone: string;
-  email: string;
-}
-
 export interface ReviewI {
-  _id: string;
+  _id?: string;
   title: string;
   description: string;
   username: string;
   userID: string;
+  rating: number;
   bussiness: string; //id
   likes: number;
   createdAt?: string; // should be mandatory
@@ -24,11 +14,14 @@ export interface BussinessI {
   _id: string;
   name: string;
   about: string;
-  reviews: ReviewI[];
-  contact: BussinessContactI;
-  location: BussinessAddressI;
-  createdAt?: string;
-  updatedAt?: string;
+  reviews: ReviewI[]; // ids
+  categories: string;
+  avgRating: number;
+  phone: string;
+  email: string;
+  district: string;
+  city: string;
+  street: string;
 }
 
 export interface BusinessesLayoutProps {
