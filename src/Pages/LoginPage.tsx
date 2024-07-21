@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import api from "../services/api.service";
 import { Eye, EyeOff, LockKeyhole, User } from "lucide-react";
-import { IconInput } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
+import { IconInput } from "../Components/ui/input";
 import { useAuth } from "../Context/AuthContext";
 import { useSnackBar } from "../Context/SnackBarContext";
 
@@ -11,7 +11,7 @@ function LoginPage() {
   const { loginUser } = useAuth();
   const [displayPassword, setDisplayPassword] = useState(false);
   const [newUser, setNewUser] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -63,11 +63,11 @@ function LoginPage() {
       >
         <IconInput
           Icon={User}
-          value={newUser.username}
+          value={newUser.email}
           onChange={handleInputChange}
           type="text"
-          placeholder="Username"
-          name="username"
+          placeholder="Email"
+          name="email"
           required
         />
         <div className="relative">

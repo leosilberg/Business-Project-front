@@ -1,10 +1,10 @@
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { Star } from "lucide-react";
 import { useRef, useState } from "react";
 import { useAuth } from "../../Context/AuthContext";
-import { BussinessI, ReviewI } from "../../Types/Businesses.types";
 import { useSnackBar } from "../../Context/SnackBarContext";
+import { BussinessI, NewReviewI } from "../../Types/Businesses.types";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export interface AddReviewFormProps {
   bussiness: BussinessI;
@@ -63,14 +63,10 @@ function AddReviewForm({ bussiness }: AddReviewFormProps) {
       return;
     }
 
-    const newReview: ReviewI = {
+    const newReview: NewReviewI = {
       title: titleFormData as string,
       description: descriptionFormData as string,
       rating: selectedReviewValue,
-      username: loggedInUser?.username as string,
-      userID: loggedInUser?._id as string,
-      bussiness: bussiness._id,
-      likes: 0,
     };
     console.log(newReview);
     setSelectedReviewValue(1);

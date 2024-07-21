@@ -1,6 +1,8 @@
 // import api from "../services/api.service";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { createContext, useState, useEffect, useContext } from "react";
+import { isAxiosError } from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ChildrenPropsI,
   LoginUserDataI,
@@ -8,6 +10,8 @@ import {
   UserContextType,
   UserI,
 } from "../Types/UserAndAuth.types";
+import api from "../services/api.ts";
+import { UsersService } from "../services/user.service.ts";
 
 const AuthContext = createContext<UserContextType | undefined>(undefined);
 
@@ -16,6 +20,7 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
     undefined
   );
   const [token, setToken] = useLocalStorage<string | null>("jwt-taskify", null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
@@ -24,34 +29,27 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
     }
 
     async function fetchUser() {
-      setLoggedInUser({
-        _id: "string",
-        username: "Eden",
-        email: "string@gmail",
-        likedReviews: ["r3", "r2", "r1"],
-      });
-      //   try {
-      //     const response = await api.get("/auth/loggedInUser");
-      //     setLoggedInUser(response.data);
-      //   } catch (error: any) {
-      //     if (error.response?.status === 401) {
-      //       console.error("Invalid token, logging out");
-      //       logoutUser();
-      //     } else if (error.response?.status === 404) {
-      //       console.error("User not found, logging out");
-      //       logoutUser();
-      //     } else {
-      //       console.error("Error fetching user data:", error);
-      //     }
-      //   }
+      // setLoggedInUser({
+      //   _id: "string",
+      //   username: "Eden",
+      //   email: "string@gmail",
+      //   likedReviews: ["r3", "r2", "r1"],
+      // });
+      try {
+        const user = await UsersService.getUser();
+        setLoggedInUser(user);
+      } catch (error) {
+        console.log(`AuthContext: `, (error as Error).message);
+        logoutUser();
+      }
     }
 
     fetchUser();
   }, [token]);
 
-  //   useEffect(() => {
-  //     if (loggedInUser) navigate("/", { replace: true });
-  //   }, [loggedInUser]);
+  useEffect(() => {
+    if (loggedInUser) navigate("/", { replace: true });
+  }, [loggedInUser]);
 
   function logoutUser() {
     setToken(null);
@@ -59,21 +57,26 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
   }
 
   async function loginUser(userData: LoginUserDataI) {
-    setToken("1234");
-    // try {
-    //   const response = await api.post("/auth/login", userData);
-    //   setToken(response.data.token);
-    // } catch (error) {
-    //   console.error("Error logging in:", error);
-    // }
+    try {
+      const { data: token } = await api.post("/auth/login", userData);
+      setToken(token);
+    } catch (error) {
+      console.log(`AuthContext: `, error);
+      if (isAxiosError(error))
+        throw error.response?.data ? error.response.data : error.message;
+      else throw (error as Error).message;
+    }
   }
 
   async function register(userData: RegisteredUserI) {
-    // try {
-    //   await api.post("/auth/register", userData);
-    // } catch (error) {
-    //   console.error("Error registering:", error);
-    // }
+    try {
+      const { data } = await api.post("/auth/register", userData);
+    } catch (error) {
+      console.log(`AuthContext: `, error);
+      if (isAxiosError(error))
+        throw error.response?.data ? error.response.data : error.message;
+      else throw (error as Error).message;
+    }
   }
 
   async function likeReview(reviewID: string) {

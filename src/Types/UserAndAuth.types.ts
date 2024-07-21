@@ -2,12 +2,13 @@ import { ReactNode } from "react";
 
 export interface UserI {
   _id: string;
-  username: string;
   email: string;
-  likedReviews: string[]; // Reviews IDs
-  createdAt?: string;
-  updatedAt?: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  likedReviews: string[];
 }
+
 export interface RegisteredUserI {
   username: string;
   email: string;
@@ -17,7 +18,7 @@ export interface RegisteredUserI {
 }
 
 export interface LoginUserDataI {
-  username: string;
+  email: string;
   password: string;
 }
 

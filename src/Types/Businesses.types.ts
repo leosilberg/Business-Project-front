@@ -1,27 +1,32 @@
 export interface ReviewI {
-  _id?: string;
+  _id: string;
   title: string;
   description: string;
-  username: string;
-  userID: string;
   rating: number;
-  bussiness: string; //id
+  username: string;
+  businessId: string;
+  userId: string;
   likes: number;
-  createdAt?: string; // should be mandatory
+  createdAt?: string;
+}
+export interface NewReviewI {
+  title: string;
+  description: string;
+  rating: number;
 }
 
 export interface BussinessI {
   _id: string;
   name: string;
   about: string;
-  reviews: ReviewI[]; // ids
-  categories: string;
-  avgRating: number;
+  category: string;
   phone: string;
   email: string;
   district: string;
   city: string;
   street: string;
+  reviews?: ReviewI[]; // ids
+  avgRating: number;
 }
 
 export interface BusinessesLayoutProps {
