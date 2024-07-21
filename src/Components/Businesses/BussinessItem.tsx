@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Mail, PhoneCall } from "lucide-react";
+import { Mail, PhoneCall, Star } from "lucide-react";
 
 function BussinessItem({ bussiness }: BussinessItemProps) {
   const navigate = useNavigate();
@@ -20,20 +20,23 @@ function BussinessItem({ bussiness }: BussinessItemProps) {
     <li className=" w-full">
       <Card className=" h-full cursor-pointer" onClick={moveToBussinessPage}>
         <CardHeader>
-          <CardTitle className=" text-primary">{bussiness.name}</CardTitle>
+          <div className=" flex gap-2 items-center">
+            <CardTitle className=" text-primary">{bussiness.name}</CardTitle>
+            <div className=" flex text-[#fff700] font-semibold items-center gap-1">{bussiness.avgRating} <Star size={16} color="#fff700" /></div>
+          </div>
           <CardDescription>{bussiness.about}</CardDescription>
         </CardHeader>
         <CardContent className=" text-sm flex flex-col gap-2">
           <p className=" ">
-            {bussiness.location.city}, <span>{bussiness.location.street}</span>
+            {bussiness.city}, <span>{bussiness.street}</span>
           </p>
           <div>
             <p className=" text-muted-foreground flex gap-1 items-center">
-              <span>{bussiness.contact.phone}</span>
+              <span>{bussiness.phone}</span>
               <PhoneCall size={16} />
             </p>
             <p className=" text-muted-foreground flex gap-1 items-center">
-              <span>{bussiness.contact.email}</span>
+              <span>{bussiness.email}</span>
               <Mail size={16} />
             </p>
           </div>
