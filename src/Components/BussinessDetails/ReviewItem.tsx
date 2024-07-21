@@ -92,9 +92,9 @@ function ReviewItem(props: ReviewProps) {
           </div>
         </div>
         <CardDescription>{curReview.description}</CardDescription>
-          <div className=" flex text-[#fff700] font-semibold items-center gap-1">
-            {curReview.rating} <Star size={16} color="#fff700" />
-          </div>
+        <div className=" flex items-center gap-1">
+          {curReview.rating} <Star size={16} color="#fff700" />
+        </div>
       </CardHeader>
     </Card>
   );

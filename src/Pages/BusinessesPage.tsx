@@ -5,6 +5,7 @@ import BusinessesLayout from "../Components/Businesses/BusinessesLayout";
 import { Card } from "../Components/ui/card";
 import { BussinessI } from "../Types/Businesses.types";
 import { businesses } from "../constants";
+import BusinessesFiltersLayout from "../Components/Businesses/BusinessesFiltersLayout";
 
 function BusinessesPage() {
   const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
@@ -15,7 +16,9 @@ function BusinessesPage() {
   return (
     <>
       <div className=" grid grid-rows-layout break-700px:grid-cols-2 h-screen gap-y-8 gap-x-2">
-        <Card className=" min-h-40 break-700px:col-span-2">filters</Card>
+        <Card className=" border-0 shadow-none min-h-40 break-700px:col-span-2">
+          <BusinessesFiltersLayout />
+        </Card>
         <Card className=" hidden break-700px:block">
           <img
             className="h-full w-full"
