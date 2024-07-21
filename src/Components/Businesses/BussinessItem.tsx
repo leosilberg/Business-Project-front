@@ -22,7 +22,9 @@ function BussinessItem({ bussiness }: BussinessItemProps) {
         <CardHeader>
           <div className=" flex gap-2 items-center">
             <CardTitle className=" text-primary">{bussiness.name}</CardTitle>
-            <div className=" flex text-[#fff700] font-semibold items-center gap-1">{bussiness.avgRating} <Star size={16} color="#fff700" /></div>
+            <div className=" flex items-center gap-1">
+              {bussiness.avgRating} <Star size={16} color="#fff700" />
+            </div>
           </div>
           <CardDescription>{bussiness.about}</CardDescription>
         </CardHeader>

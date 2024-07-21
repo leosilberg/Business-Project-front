@@ -35,7 +35,7 @@ function BussinessDetailsPage() {
           <CardHeader>
             <div className=" flex gap-2 items-center">
               <CardTitle className=" text-primary">{bussiness.name}</CardTitle>
-              <div className=" flex text-[#fff700] text-lg font-semibold items-center gap-1">
+              <div className=" flex text-lg items-center gap-1">
                 {bussiness.avgRating} <Star size={20} color="#fff700" />
               </div>
             </div>
