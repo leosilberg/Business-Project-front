@@ -23,3 +23,15 @@ export interface ModalProps {
   children: ReactNode;
   className?: string;
 }
+
+export interface SelectOptionsProps {
+  selectTitle: string;
+  selectValuePlaceholder: string;
+  children: ReactNode;
+}
+
+export interface CustomSliderProps {
+  defaultValue: number;
+  maxValue: number;
+  steps: number;
+}
