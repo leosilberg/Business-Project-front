@@ -1,6 +1,6 @@
 // import api from "../services/api.service";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { isAxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../Types/UserAndAuth.types";
 import api from "../services/api.ts";
 import { UsersService } from "../services/user.service.ts";
+import { useSnackBar } from "./SnackBarContext.tsx";
 
 const AuthContext = createContext<UserContextType | undefined>(undefined);
 
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
   const [loggedInUser, setLoggedInUser] = useState<null | undefined | UserI>(
     undefined
   );
+  const { displaySnackBar } = useSnackBar();
   const [token, setToken] = useLocalStorage<string | null>("jwt-taskify", null);
   const navigate = useNavigate();
 
@@ -27,14 +29,7 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
       setLoggedInUser(null);
       return;
     }
-
     async function fetchUser() {
-      // setLoggedInUser({
-      //   _id: "string",
-      //   username: "Eden",
-      //   email: "string@gmail",
-      //   likedReviews: ["r3", "r2", "r1"],
-      // });
       try {
         const user = await UsersService.getUser();
         setLoggedInUser(user);
@@ -43,13 +38,8 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
         logoutUser();
       }
     }
-
     fetchUser();
   }, [token]);
-
-  useEffect(() => {
-    if (loggedInUser) navigate("/", { replace: true });
-  }, [loggedInUser]);
 
   function logoutUser() {
     setToken(null);
@@ -60,19 +50,39 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
     try {
       const { data: token } = await api.post("/auth/login", userData);
       setToken(token);
+      displaySnackBar({
+        label: "Welcome",
+      });
+      navigate("/");
     } catch (error) {
       console.log(`AuthContext: `, error);
-      if (isAxiosError(error))
-        throw error.response?.data ? error.response.data : error.message;
-      else throw (error as Error).message;
+      displaySnackBar({
+        label: "Error in login proccess!",
+        context: isAxiosError(error) ? error?.response?.data : "Error",
+        closeManually: true,
+        snackbarType: "danger",
+      });
     }
   }
 
   async function register(userData: RegisteredUserI) {
     try {
-      const { data } = await api.post("/auth/register", userData);
-    } catch (error) {
+      await api.post("/auth/register", userData);
+      displaySnackBar({
+        label: "You registered successfully",
+      });
+      navigate("/auth");
+    } catch (error: any) {
       console.log(`AuthContext: `, error);
+      displaySnackBar({
+        label: "Error in register proccess!",
+        context:
+          error.response.status === 400
+            ? "Sorry, User already exists"
+            : "Sorry, Internal Error",
+        closeManually: true,
+        snackbarType: "danger",
+      });
       if (isAxiosError(error))
         throw error.response?.data ? error.response.data : error.message;
       else throw (error as Error).message;
@@ -80,7 +90,6 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
   }
 
   async function likeReview(reviewID: string) {
-    // update user, bussiness and review data
     setLoggedInUser((prev) => {
       if (!prev) {
         throw new Error("Logged in user should not be null or undefined");
@@ -89,7 +98,6 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
     });
   }
   async function dislikeReview(reviewID: string) {
-    // update user
     setLoggedInUser((prev) => {
       if (!prev) {
         throw new Error("Logged in user should not be null or undefined");

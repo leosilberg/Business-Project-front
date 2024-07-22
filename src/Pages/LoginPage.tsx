@@ -14,8 +14,6 @@ function LoginPage() {
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
-  const { displaySnackBar } = useSnackBar();
 
   function handleInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
     setNewUser((prev) => {
@@ -29,32 +27,9 @@ function LoginPage() {
   async function handleLoginUser(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     loginUser(newUser);
-    displaySnackBar({
-      label: "Welcome",
-    });
-    navigate("/");
-    // try {
-    //   const res = await api.post(AUTH_URL + "login", newUser);
-    //   const { token } = res.data;
-    //   localStorage.setItem("userToken", token);
-    //   loginUserContext();
-    //   navigate("/");
-    //   displaySnackBar({
-    //     label: `Welcome ${newUser.username}`,
-    //   });
-    // } catch (err: any) {
-    //   displaySnackBar({
-    //     label: "Error in login proccess!",
-    //     context:
-    //       err.response.data.error === "Authentication failed"
-    //         ? "Please check your fields"
-    //         : "Error",
-    //     closeManually: true,
-    //     snackbarType: "danger",
-    //   });
-    //   console.error(err);
-    // }
+    ev.currentTarget.reset();
   }
+
   return (
     <>
       <form

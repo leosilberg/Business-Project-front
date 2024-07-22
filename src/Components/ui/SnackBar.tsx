@@ -17,7 +17,7 @@ function SnackBar() {
     <div
       className={`${
         snackBar.display ? "" : "hidden"
-      } fixed bottom-2 right-2 z-50 w-1/2 max-w-72 bg-green-300 px-4 py-3 rounded-md ${
+      } fixed bottom-2 right-2 z-50 w-1/2 max-w-72 bg-green-300 px-4 py-4 rounded-md ${
         snackBar.snackbarType === "danger" && "bg-red-300"
       }`}
     >
@@ -40,7 +40,7 @@ function SnackBar() {
         <Button
           size={"icon"}
           className={
-            " absolute top-0 right-0  text-background transition-all hover:scale-110 hover:text-gray-600"
+            " absolute top-0 right-0 text-background transition-all hover:scale-110 hover:text-gray-600"
           }
           variant="naked"
           onClick={() => {

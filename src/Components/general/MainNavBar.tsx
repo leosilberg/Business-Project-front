@@ -24,7 +24,7 @@ export default function MainNavBar() {
               className=" text-md font-semibold text-primary flex gap-2 items-center"
               to="/businesses"
             >
-              Explore Bussiness
+              {" "}
               <BriefcaseBusiness size={16} />
             </Link>
             <div>
