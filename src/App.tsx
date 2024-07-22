@@ -7,6 +7,7 @@ import RegisterPage from "./Pages/RegisterPage";
 import BusinessesPage from "./Pages/BusinessesPage";
 import BussinessDetailsPage from "./Pages/BussinessDetailsPage";
 import NotFoundPage from "./Pages/NotFoundPage";
+import UserPage from "./Pages/UserPage";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           <Route path="/businesses">
             <Route index element={<BusinessesPage />} />
             <Route path=":bussinessID" element={<BussinessDetailsPage />} />
+          </Route>
+          <Route path="/user">
+            <Route index element={<UserPage />} />
           </Route>
         </Route>
         <Route path="/auth" element={<AuthLayout />}>

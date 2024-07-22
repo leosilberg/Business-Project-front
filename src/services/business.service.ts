@@ -2,13 +2,10 @@ import { isAxiosError } from "axios";
 import { BussinessI } from "../Types/Businesses.types.js";
 import api from "./api.js";
 
-async function getBusinesses(searchParams?: string): Promise<BussinessI[]> {
+async function getBusinesses(searchParams?: string): Promise<any> {
   try {
-    const { data: businesses } = await api.get<BussinessI[]>(
-      `business/${searchParams}`
-    );
-    // const { data: businesses } = await api.get<BussinessI[]>("business");
-    return businesses;
+    const { data } = await api.get<BussinessI[]>(`business/${searchParams}`);
+    return data;
   } catch (error) {
     console.log(`business.service: `, error);
     if (isAxiosError(error))

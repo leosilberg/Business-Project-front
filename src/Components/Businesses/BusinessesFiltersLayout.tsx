@@ -1,12 +1,13 @@
 import { MapPinned, Search } from "lucide-react";
 import { IconInput } from "../ui/input";
-import { SelectOptions } from "../ui/SelectOptions";
+import { DisableSelectOptions, SelectOptions } from "../ui/SelectOptions";
 import { SelectItem } from "../ui/select";
 import CustomSlider from "../ui/CustomSlider";
 import { Badge } from "../ui/badge";
 import { constBusinessCategories } from "../../constants";
 import { SetURLSearchParams } from "react-router-dom";
 import { BussinessI } from "../../Types/Businesses.types";
+import { Button } from "../ui/button";
 
 export interface BusinessesFiltersLayoutProps {
   setBusinessesList: React.Dispatch<React.SetStateAction<[] | BussinessI[]>>;
@@ -19,12 +20,13 @@ function BusinessesFiltersLayout({
   setSearchParams,
   searchParams,
 }: BusinessesFiltersLayoutProps) {
-  const nameSearch = searchParams.get("name");
-  // const districtSearch = searchParams.get("district");
+  // Derived States - search params
+  const nameSearch = searchParams.get("name") || "";
   const citySearch = searchParams.get("city") || "";
+  const districtSearch = searchParams.get("district") || "";
   const minRatingSearch = searchParams.get("minRating") || "1";
   const categoriesSearch = searchParams.get("category");
-  const categoriesSearchArr = categoriesSearch // important!
+  const categoriesSearchArr = categoriesSearch
     ? categoriesSearch.split(",")
     : [];
 
@@ -38,14 +40,17 @@ function BusinessesFiltersLayout({
         : categoriesSearchArr.filter((category) => category !== inputName);
       setSearchParams((prev) => {
         prev.set("page", "1");
-        prev.set("category", newCategoriesArr.join(","));
+        newCategoriesArr.length > 0
+          ? prev.set("category", newCategoriesArr.join(","))
+          : prev.delete("category");
         return prev;
       });
     } else {
       const value = ev.target.value;
       setSearchParams((prev) => {
         prev.set("page", "1");
-        prev.set(inputName, value);
+        !value ? prev.delete(inputName) : prev.set(inputName, value);
+        inputName === "city" && value && prev.delete("district");
         return prev;
       });
     }
@@ -55,7 +60,7 @@ function BusinessesFiltersLayout({
   function handleSelectFilter(value: string) {
     setSearchParams((prev) => {
       prev.set("page", "1");
-      prev.set("district", value);
+      !citySearch && prev.set("district", value);
       return prev;
     });
   }
@@ -63,18 +68,21 @@ function BusinessesFiltersLayout({
   function handleSliderFilter(value: number[]) {
     setSearchParams((prev) => {
       prev.set("page", "1");
-      prev.set("minRating", value[0].toString());
+      value[0] === 1
+        ? prev.delete("minRating")
+        : prev.set("minRating", value[0].toString());
       return prev;
     });
   }
 
   function resetFilters() {
     setSearchParams((prev) => {
-      prev.set("name", "");
-      prev.set("district", "");
-      prev.set("city", "");
-      prev.set("minRating", "1");
-      prev.set("category", "");
+      prev.delete("name");
+      prev.delete("district");
+      prev.delete("city");
+      prev.delete("minRating");
+      prev.delete("category");
+      prev.delete("page");
       return prev;
     });
   }
@@ -83,15 +91,14 @@ function BusinessesFiltersLayout({
     <>
       <div className=" flex flex-col gap-2 flex-wrap max-w-600 mx-auto">
         <IconInput
-          value={nameSearch || ""}
+          value={nameSearch}
           onChange={handledInputFilter}
           name="name"
           type="text"
           placeholder="Search a bussiness ..."
           Icon={Search}
         />
-
-        <ul className=" flex gap-2 flex-wrap">
+        <ul className=" flex gap-2 flex-wrap px-4">
           {constBusinessCategories.map((category, index) => {
             const isCheckedCategory = categoriesSearchArr.includes(category);
             return (
@@ -117,16 +124,22 @@ function BusinessesFiltersLayout({
         </ul>
         {/* Location */}
         <div className=" grid break-400px:grid-cols-2 gap-2 px-2">
-          <SelectOptions
-            onValueChange={handleSelectFilter}
-            selectName="district"
-            selectValuePlaceholder="Filter by district"
-            selectTitle="District"
-          >
-            <SelectItem value="north">North</SelectItem>
-            <SelectItem value="center">Center</SelectItem>
-            <SelectItem value="south">South</SelectItem>
-          </SelectOptions>
+          {!citySearch ? (
+            <SelectOptions
+              curValue={districtSearch || ""}
+              onValueChange={handleSelectFilter}
+              selectName="district"
+              selectValuePlaceholder="Filter by district"
+              selectTitle="District"
+            >
+              <SelectItem value="North">North</SelectItem>
+              <SelectItem value="Central District">Center</SelectItem>
+              <SelectItem value="South">South</SelectItem>
+            </SelectOptions>
+          ) : (
+            <DisableSelectOptions selectValuePlaceholder="Filter by district" />
+          )}
+
           <IconInput
             value={citySearch}
             onChange={handledInputFilter}
@@ -146,6 +159,9 @@ function BusinessesFiltersLayout({
             steps={0.5}
           />
         </div>
+        <Button onClick={resetFilters} className=" max-w-36 mx-auto">
+          Reset Filters
+        </Button>
       </div>
     </>
   );
