@@ -2,9 +2,12 @@ import { isAxiosError } from "axios";
 import { BussinessI } from "../Types/Businesses.types.js";
 import api from "./api.js";
 
-async function getBusinesses(): Promise<BussinessI[]> {
+async function getBusinesses(searchParams?: string): Promise<BussinessI[]> {
   try {
-    const { data: businesses } = await api.get<BussinessI[]>("business");
+    const { data: businesses } = await api.get<BussinessI[]>(
+      `business/${searchParams}`
+    );
+    // const { data: businesses } = await api.get<BussinessI[]>("business");
     return businesses;
   } catch (error) {
     console.log(`business.service: `, error);
@@ -73,8 +76,6 @@ async function editBusiness(
     else throw (error as Error).message;
   }
 }
-
-
 
 export const BusinessesService = {
   getBusinesses,

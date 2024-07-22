@@ -35,5 +35,3 @@ export interface BusinessesLayoutProps {
 export interface BussinessItemProps {
   bussiness: BussinessI;
 }
-
-

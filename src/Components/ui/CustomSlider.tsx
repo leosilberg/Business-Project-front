@@ -3,16 +3,14 @@ import { CustomSliderProps } from "../../Types/UI_Components.types";
 import { Slider } from "./slider";
 
 function CustomSlider(props: CustomSliderProps) {
-  const { defaultValue, maxValue, steps } = props;
+  const { defaultValue, maxValue, steps, onValueChange } = props;
 
   return (
     <div className=" relative">
       <Slider
         className=" py-1 mb-1"
-        onValueChange={(ev) => {
-          console.log(ev[0]);
-        }}
-        defaultValue={[defaultValue]}
+        onValueChange={onValueChange}
+        defaultValue={[Number(defaultValue)]}
         min={1}
         max={maxValue}
         step={steps}
