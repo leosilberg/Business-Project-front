@@ -10,13 +10,12 @@ import PaginationLayout from "../Components/Businesses/PaginationLayout";
 import MyMap from "../Components/Businesses/Map";
 
 function BusinessesPage() {
+  const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const totalPagesRef = useRef<null | number>(null);
-
   const debouncedSearchParams = useDebounce(searchParams, 400);
 
-  const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
 
   useEffect(() => {
     async function getAllBusinesses() {
