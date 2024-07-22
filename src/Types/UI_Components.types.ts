@@ -28,6 +28,7 @@ export interface SelectOptionsProps {
   selectName: string;
   selectTitle: string;
   selectValuePlaceholder: string;
+  curValue?: string;
   children: ReactNode;
   onValueChange?: (value: string) => void;
 }

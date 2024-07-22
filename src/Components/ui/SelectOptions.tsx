@@ -14,12 +14,13 @@ export function SelectOptions(props: SelectOptionsProps) {
     selectValuePlaceholder,
     children,
     selectName,
+    curValue,
     onValueChange,
   } = props;
   return (
-    <Select onValueChange={onValueChange} name={selectName} >
+    <Select onValueChange={onValueChange} name={selectName}>
       <SelectTrigger className="min-w-40 ">
-        <SelectValue placeholder={selectValuePlaceholder} />
+        <SelectValue placeholder={curValue || selectValuePlaceholder || ""} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -27,6 +28,19 @@ export function SelectOptions(props: SelectOptionsProps) {
           {children}
         </SelectGroup>
       </SelectContent>
+    </Select>
+  );
+}
+
+export function DisableSelectOptions(props: {
+  selectValuePlaceholder: string;
+}) {
+  const { selectValuePlaceholder } = props;
+  return (
+    <Select>
+      <SelectTrigger className="min-w-40 ">
+        <SelectValue placeholder={selectValuePlaceholder} />
+      </SelectTrigger>
     </Select>
   );
 }

@@ -1,5 +1,11 @@
-import { BriefcaseBusiness, LogIn, UserRoundCog } from "lucide-react";
-import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  LogIn,
+  User,
+  UserRoundCog,
+} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenuCheckboxItem } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { AvatarDemo } from "../ui/AvatarDemo";
@@ -9,6 +15,11 @@ import { ModeToggle } from "../ui/mode-toggle";
 // import { ModeToggle } from "../ui/ModeToggle";
 
 export default function MainNavBar() {
+  const location = useLocation();
+  const pathArr = location.pathname.split("/");
+  const isDetailsPage = pathArr.includes("businesses") && pathArr.length > 2;
+  const navigate = useNavigate();
+
   const { logoutUser, loggedInUser } = useAuth();
   return (
     <>
@@ -20,13 +31,14 @@ export default function MainNavBar() {
             </Link>
           </li>
           <li className=" flex items-center gap-2">
-            <Link
-              className=" text-md font-semibold text-primary flex gap-2 items-center"
-              to="/businesses"
-            >
-              {" "}
-              <BriefcaseBusiness size={16} />
-            </Link>
+            {isDetailsPage && (
+              <ArrowRight
+                className=" cursor-pointer"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              />
+            )}
             <div>
               {loggedInUser ? (
                 <MyDropDownMenu
@@ -37,7 +49,19 @@ export default function MainNavBar() {
                   }
                   dropDownItems={[
                     <DropdownMenuCheckboxItem className="">
-                      <Link to="/businesses">Optional</Link>
+                      <Link to="/user" className=" flex gap-2 items-center">
+                        <span>User Place</span>
+                        <User className="text-primary" size={16} />
+                      </Link>
+                    </DropdownMenuCheckboxItem>,
+                    <DropdownMenuCheckboxItem className="">
+                      <Link
+                        to="/businesses"
+                        className=" flex gap-2 items-center"
+                      >
+                        <span>businesses</span>{" "}
+                        <BriefcaseBusiness className="text-primary" size={16} />
+                      </Link>
                     </DropdownMenuCheckboxItem>,
                     <DropdownMenuCheckboxItem className=" text-red-500 font-semibold hover:text-red-600 cursor-pointer hover:bg-slate-50">
                       <button

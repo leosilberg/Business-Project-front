@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { BussinessI } from "../Types/Businesses.types";
 import {
   Card,
@@ -26,6 +26,8 @@ function BussinessDetailsPage() {
   const navigate = useNavigate();
   const { snackBar, displaySnackBar } = useSnackBar();
   const { loggedInUser } = useAuth();
+
+  // todo figure out type
 
   useEffect(() => {
     async function handleGetBusiness() {
