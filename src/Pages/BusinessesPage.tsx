@@ -4,14 +4,22 @@ import { useEffect, useState } from "react";
 import BusinessesLayout from "../Components/Businesses/BusinessesLayout";
 import { Card } from "../Components/ui/card";
 import { BussinessI } from "../Types/Businesses.types";
-import { businesses } from "../constants";
 import BusinessesFiltersLayout from "../Components/Businesses/BusinessesFiltersLayout";
+import { BusinessesService } from "../services/business.service";
 
 function BusinessesPage() {
   const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
 
   useEffect(() => {
-    setBusinessesList(businesses);
+    async function getAllBusinesses() {
+      try {
+        const businesses = await BusinessesService.getBusinesses();
+        setBusinessesList(businesses);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getAllBusinesses();
   }, []);
   return (
     <>

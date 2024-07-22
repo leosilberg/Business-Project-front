@@ -1,17 +1,17 @@
 import { Star } from "lucide-react";
 import { useRef, useState } from "react";
-import { useAuth } from "../../Context/AuthContext";
 import { useSnackBar } from "../../Context/SnackBarContext";
 import { BussinessI, NewReviewI } from "../../Types/Businesses.types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { AddReviewFormProps } from "../../Types/BusinessDetails.types";
+import { ReviewsService } from "../../services/review.service";
 
-export interface AddReviewFormProps {
-  bussiness: BussinessI;
-}
-
-function AddReviewForm({ bussiness }: AddReviewFormProps) {
-  const { loggedInUser } = useAuth();
+function AddReviewForm({
+  setBusiness,
+  businessID,
+  setOpenReviewForm,
+}: AddReviewFormProps) {
   const { displaySnackBar } = useSnackBar();
   const [selectedReviewValue, setSelectedReviewValue] = useState<number>(1);
   const [hoverReviewValues, setHoverReviewValues] = useState<number>(0);
@@ -45,7 +45,17 @@ function AddReviewForm({ bussiness }: AddReviewFormProps) {
     }
   }
 
-  function handleSubmitForm(ev: React.FormEvent<HTMLFormElement>) {
+  function resetForm(ev: React.FormEvent<HTMLFormElement>) {
+    setSelectedReviewValue(1);
+    displaySnackBar({
+      label: "Your review added successfully",
+    });
+    setOpenReviewForm(false);
+    const form = ev.target as HTMLFormElement;
+    form.reset();
+  }
+
+  async function handleSubmitForm(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget);
     const titleFormData = formData.get("title");
@@ -68,12 +78,29 @@ function AddReviewForm({ bussiness }: AddReviewFormProps) {
       description: descriptionFormData as string,
       rating: selectedReviewValue,
     };
-    console.log(newReview);
-    setSelectedReviewValue(1);
-    ev.currentTarget.reset();
-    displaySnackBar({
-      label: "Your review added successfully",
-    });
+
+
+    try {
+      const savedReview = await ReviewsService.createReview(
+        newReview,
+        businessID
+      );
+      setBusiness((prev: BussinessI | null | undefined) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          reviews: prev.reviews ? [savedReview, ...prev.reviews] : undefined,
+        };
+      });
+      resetForm(ev);
+    } catch (error) {
+      displaySnackBar({
+        label: "Error!",
+        context: "Sorry there was an internal error",
+        closeManually: true,
+        snackbarType: "danger",
+      });
+    }
   }
 
   return (

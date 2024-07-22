@@ -17,13 +17,13 @@ function BussinessItem({ bussiness }: BussinessItemProps) {
   }
 
   return (
-    <li className=" w-full">
+    <li className=" w-full max-w-500">
       <Card className=" h-full cursor-pointer" onClick={moveToBussinessPage}>
         <CardHeader>
           <div className=" flex gap-2 items-center">
             <CardTitle className=" text-primary">{bussiness.name}</CardTitle>
             <div className=" flex items-center gap-1">
-              {bussiness.avgRating} <Star size={16} color="#fff700" />
+              {bussiness.avgRating.toFixed(1)} <Star size={16} color="#fff700" />
             </div>
           </div>
           <CardDescription>{bussiness.about}</CardDescription>

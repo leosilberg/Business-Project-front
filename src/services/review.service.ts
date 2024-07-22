@@ -2,9 +2,11 @@ import { isAxiosError } from "axios";
 import { NewReviewI, ReviewI } from "../Types/Businesses.types.js";
 import api from "./api.js";
 
-async function getReviews(): Promise<ReviewI[]> {
+async function getReviews(businessId: string): Promise<ReviewI[]> {
   try {
-    const { data: reviews } = await api.get<ReviewI[]>("review");
+    const { data: reviews } = await api.get<ReviewI[]>(
+      `business/${businessId}/reviews`
+    );
     return reviews;
   } catch (error) {
     console.log(`reviews.service: `, error);
@@ -26,9 +28,15 @@ async function getReview(reviewId: string): Promise<ReviewI> {
   }
 }
 
-async function createReview(newReview: NewReviewI): Promise<ReviewI> {
+async function createReview(
+  newReview: NewReviewI,
+  businessId: string
+): Promise<ReviewI> {
   try {
-    const { data } = await api.post<ReviewI>("/review", newReview);
+    const { data } = await api.post<ReviewI>(
+      "review/business/" + businessId,
+      newReview
+    );
     return data;
   } catch (error) {
     console.log(`reviews.service: `, error);

@@ -35,9 +35,5 @@ export interface BusinessesLayoutProps {
 export interface BussinessItemProps {
   bussiness: BussinessI;
 }
-export interface ReviewProps {
-  curReview: ReviewI;
-  setBussiness: React.Dispatch<
-    React.SetStateAction<BussinessI | null | undefined>
-  >;
-}
+
+

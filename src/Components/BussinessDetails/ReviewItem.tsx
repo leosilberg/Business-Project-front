@@ -1,14 +1,10 @@
 import { Heart, HeartOff, Star } from "lucide-react";
-import { BussinessI, ReviewProps } from "../../Types/Businesses.types";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { BussinessI } from "../../Types/Businesses.types";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { useAuth } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ReviewProps } from "../../Types/BusinessDetails.types";
+import { ReviewsService } from "../../services/review.service";
 
 function ReviewItem(props: ReviewProps) {
   const { curReview, setBussiness } = props;
@@ -20,12 +16,12 @@ function ReviewItem(props: ReviewProps) {
   async function handleLikeClick() {
     if (!loggedInUser) return navigate("/auth");
     try {
-      // update review, bussiness
+      await ReviewsService.likeReview(curReview._id);
       setBussiness((prev: BussinessI | null | undefined) => {
         if (!prev) return;
         return {
           ...prev,
-          reviews: prev.reviews.map((review) =>
+          reviews: prev.reviews?.map((review) =>
             review._id === curReview._id
               ? { ...review, likes: review.likes + 1 }
               : review
@@ -40,12 +36,12 @@ function ReviewItem(props: ReviewProps) {
   async function handleDislikeClick() {
     if (!loggedInUser) return navigate("/auth");
     try {
-      // update review, bussiness
+      await ReviewsService.removeLikeReview(curReview._id);
       setBussiness((prev: BussinessI | null | undefined) => {
         if (!prev) return;
         return {
           ...prev,
-          reviews: prev.reviews.map((review) =>
+          reviews: prev.reviews?.map((review) =>
             review._id === curReview._id
               ? { ...review, likes: review.likes - 1 }
               : review

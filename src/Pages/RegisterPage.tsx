@@ -1,6 +1,6 @@
 import { Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import api from "../services/api.service";
 import { useAuth } from "../Context/AuthContext";
 import { IconInput, Input } from "../Components/ui/input";
@@ -9,7 +9,6 @@ import { RegisteredUserI } from "../Types/UserAndAuth.types";
 
 function RegisterPage() {
   const { register } = useAuth();
-  const navigate = useNavigate();
   const [displayPassword, setDisplayPassword] = useState(false);
   const [newUser, setNewUser] = useState<RegisteredUserI>({
     username: "",
@@ -32,7 +31,6 @@ function RegisterPage() {
   async function handleCreateNewUser(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     register(newUser);
-    navigate("/auth");
     // try {
     //   await api.post(AUTH_URL + "register", newUser);
     //   navigate("/auth");

@@ -23,7 +23,7 @@ function App() {
           <Route index element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
         </Route>
-        <Route path="/*" element={<NotFoundPage/>}/>
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
@@ -31,11 +31,10 @@ function App() {
 
 export default App;
 
-// connect to back
-// add rating
+// full crud on users review
+// sort the reviews - userFirst
 // add date to review
-// ts errors in ReviewLayout
-// consider handle the user like click on review component
+// improve light layout
 
 // decide the layout after click a bussiness
 // filters
