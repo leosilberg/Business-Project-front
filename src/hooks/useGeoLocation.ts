@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
+import { LocationI } from "../Types/MapTypes";
 
-export interface LocationPositionI {
-  lat: number;
-  lng: number;
-}
-export interface LocationI {
-  loaded: boolean;
-  position?: LocationPositionI;
-  error?: string;
-}
+
 
 function useGeoLocation() {
   const [location, setLocation] = useState<LocationI>({
