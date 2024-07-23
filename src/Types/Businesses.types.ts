@@ -7,7 +7,8 @@ export interface ReviewI {
   businessId: string;
   userId: string;
   likes: number;
-  createdAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface NewReviewI {
   title: string;
@@ -25,7 +26,7 @@ export interface BussinessI {
   district: string;
   city: string;
   street: string;
-  reviews?: ReviewI[]; // ids
+  // reviews?: ReviewI[]; // ids
   avgRating: number;
 }
 
