@@ -8,6 +8,8 @@ import BusinessesPage from "./Pages/BusinessesPage";
 import BussinessDetailsPage from "./Pages/BussinessDetailsPage";
 import NotFoundPage from "./Pages/NotFoundPage";
 import UserPage from "./Pages/UserPage";
+import AboutPage from "./Pages/AboutPage";
+import TermsPage from "./Pages/TermsPage";
 
 function App() {
   return (
@@ -15,6 +17,9 @@ function App() {
       <Routes>
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+
           <Route path="/businesses">
             <Route index element={<BusinessesPage />} />
             <Route path=":bussinessID" element={<BussinessDetailsPage />} />
@@ -23,6 +28,7 @@ function App() {
             <Route index element={<UserPage />} />
           </Route>
         </Route>
+
         <Route path="/auth" element={<AuthLayout />}>
           <Route index element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />

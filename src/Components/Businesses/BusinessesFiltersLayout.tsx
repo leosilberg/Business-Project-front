@@ -25,6 +25,7 @@ function BusinessesFiltersLayout({
   const citySearch = searchParams.get("city") || "";
   const districtSearch = searchParams.get("district") || "";
   const minRatingSearch = searchParams.get("minRating") || "1";
+
   const categoriesSearch = searchParams.get("category");
   const categoriesSearchArr = categoriesSearch
     ? categoriesSearch.split(",")

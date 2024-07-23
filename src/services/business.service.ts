@@ -1,6 +1,7 @@
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 import { BussinessI } from "../Types/Businesses.types.js";
 import api from "./api.js";
+import { API_KEY } from "../secret.js";
 
 async function getBusinesses(searchParams?: string): Promise<any> {
   try {
@@ -25,6 +26,18 @@ async function getBusiness(businessId: string): Promise<BussinessI> {
     if (isAxiosError(error))
       throw error.response?.data ? error.response.data : error.message;
     else throw (error as Error).message;
+  }
+}
+
+async function getBusinessLocation(formmatedAddress: string) {
+  try {
+    const { data } = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${formmatedAddress}&key=${API_KEY}`
+    );
+    const loc = data.results[0].geometry.location;
+    return { data, loc };
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -80,4 +93,5 @@ export const BusinessesService = {
   editBusiness,
   getBusiness,
   createBusiness,
+  getBusinessLocation
 };

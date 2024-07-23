@@ -119,9 +119,9 @@ function AddReviewForm({
             return (
               <Star
                 key={value}
-                color="#eeff00"
+                color="#facf22"
                 className={
-                  markedStar >= value ? "fill-[#eeff00]" : "fill-background"
+                  markedStar >= value ? "fill-[#facf22]" : "fill-background"
                 }
                 cursor={"pointer"}
                 size={18}

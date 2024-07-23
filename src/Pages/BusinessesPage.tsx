@@ -7,7 +7,7 @@ import { BusinessesService } from "../services/business.service";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
 import PaginationLayout from "../Components/Businesses/PaginationLayout";
-import MyMap from "../Components/Businesses/Map";
+import BusinessesMap from "../Components/Businesses/Map";
 
 function BusinessesPage() {
   const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
@@ -34,7 +34,7 @@ function BusinessesPage() {
   }, [debouncedSearchParams]);
   return (
     <>
-      <div className=" grid grid-rows-layout break-700px:grid-cols-2 h-screen gap-y-8 gap-x-2 ">
+      <div className=" h-full grid grid-rows-layout break-700px:grid-cols-2 gap-y-8 gap-x-2 ">
         <Card className=" border-0 shadow-none min-h-[450px] break-400px:min-h-80 overflow-hidden break-700px:col-span-2">
           <BusinessesFiltersLayout
             searchParams={searchParams}
@@ -43,7 +43,7 @@ function BusinessesPage() {
           />
         </Card>
         <Card className=" border-0 hidden break-700px:block pb-10">
-          <MyMap businessesList={businessesList} />
+          <BusinessesMap businessesList={businessesList} />
         </Card>
         <Card className=" border-0 pb-10 flex flex-col gap-4">
           <BusinessesLayout businessesList={businessesList} />
