@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import BusinessesLayout from "../Components/Businesses/BusinessesLayout";
-import { Card } from "../Components/ui/card";
-import { BussinessI } from "../Types/Businesses.types";
-import BusinessesFiltersLayout from "../Components/Businesses/BusinessesFiltersLayout";
-import { BusinessesService } from "../services/business.service";
-import { useLocation, useSearchParams } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
-import PaginationLayout from "../Components/Businesses/PaginationLayout";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
+import BusinessesFiltersLayout from "../Components/Businesses/BusinessesFiltersLayout";
+import BusinessesLayout from "../Components/Businesses/BusinessesLayout";
 import MyMap from "../Components/Businesses/Map";
+import PaginationLayout from "../Components/Businesses/PaginationLayout";
+import { Card } from "../Components/ui/card";
+import { BusinessesService } from "../services/business.service";
+import { socket } from "../services/sockets.ts";
+import { BussinessI } from "../Types/Businesses.types";
 
 function BusinessesPage() {
   const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
@@ -16,6 +17,20 @@ function BusinessesPage() {
   const totalPagesRef = useRef<null | number>(null);
   const debouncedSearchParams = useDebounce(searchParams, 400);
 
+  useEffect(() => {
+    socket.onAny((eventName, ...args) => {
+      if (businessesList.find((business) => business._id === eventName)) {
+        setBusinessesList((prev) => {
+          return prev.map((business) =>
+            business._id === eventName ? args[0] : business
+          );
+        });
+      }
+    });
+    return () => {
+      socket.offAny();
+    };
+  }, [businessesList]);
 
   useEffect(() => {
     async function getAllBusinesses() {

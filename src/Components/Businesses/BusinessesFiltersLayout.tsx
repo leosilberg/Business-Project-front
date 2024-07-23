@@ -1,13 +1,13 @@
-import { MapPinned, Search } from "lucide-react";
-import { IconInput } from "../ui/input";
-import { DisableSelectOptions, SelectOptions } from "../ui/SelectOptions";
-import { SelectItem } from "../ui/select";
-import CustomSlider from "../ui/CustomSlider";
-import { Badge } from "../ui/badge";
-import { constBusinessCategories } from "../../constants";
+import { MapPinned, Search, SortAscIcon, SortDescIcon } from "lucide-react";
 import { SetURLSearchParams } from "react-router-dom";
 import { BussinessI } from "../../Types/Businesses.types";
+import { constBusinessCategories } from "../../constants";
+import CustomSlider from "../ui/CustomSlider";
+import { DisableSelectOptions, SelectOptions } from "../ui/SelectOptions";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { IconInput } from "../ui/input";
+import { SelectItem } from "../ui/select";
 
 export interface BusinessesFiltersLayoutProps {
   setBusinessesList: React.Dispatch<React.SetStateAction<[] | BussinessI[]>>;
@@ -30,6 +30,8 @@ function BusinessesFiltersLayout({
     ? categoriesSearch.split(",")
     : [];
 
+  const sortBy = searchParams.get("sortBy") || "name";
+  const sortOrder = searchParams.get("sortOrder") || "asc";
   // INPUT AND CHECKBOXES
   function handledInputFilter(ev: React.ChangeEvent<HTMLInputElement>) {
     const inputName = ev.target.name;
@@ -159,9 +161,47 @@ function BusinessesFiltersLayout({
             steps={0.5}
           />
         </div>
-        <Button onClick={resetFilters} className=" max-w-36 mx-auto">
-          Reset Filters
-        </Button>
+
+        <div className="flex items-center justify-between">
+          <Button onClick={resetFilters} className=" max-w-36">
+            Reset Filters
+          </Button>
+          <div className="flex gap-2 items-center">
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              onClick={() =>
+                setSearchParams((prev) => {
+                  sortOrder === "asc"
+                    ? prev.set("sortOrder", "desc")
+                    : prev.delete("sortOrder");
+                  return prev;
+                })
+              }
+            >
+              {sortOrder === "asc" ? <SortAscIcon /> : <SortDescIcon />}
+            </Button>
+            <SelectOptions
+              curValue={sortBy}
+              onValueChange={(value) =>
+                setSearchParams((prev) => {
+                  console.log(`BusinessesFiltersLayout: `, value);
+                  value === "name"
+                    ? prev.delete("sortBy")
+                    : prev.set("sortBy", value);
+                  return prev;
+                })
+              }
+              selectName="sortBy"
+              selectValuePlaceholder="Sort By"
+              selectTitle="Sort By"
+              className="w-fit"
+            >
+              <SelectItem value="name">Name</SelectItem>
+              <SelectItem value="avgRating">Rating</SelectItem>
+            </SelectOptions>
+          </div>
+        </div>
       </div>
     </>
   );

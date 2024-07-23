@@ -9,6 +9,11 @@ export interface UserI {
   likedReviews: string[];
 }
 
+export interface UserChangeI {
+  password: string;
+  newPassword?: string;
+  newUsername?: string;
+}
 export interface RegisteredUserI {
   username: string;
   email: string;

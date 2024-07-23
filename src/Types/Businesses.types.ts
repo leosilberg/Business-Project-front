@@ -10,6 +10,10 @@ export interface ReviewI {
   createdAt: string;
   updatedAt: string;
 }
+export interface ReviewWithBusinessI extends ReviewI {
+  business: BussinessI;
+}
+
 export interface NewReviewI {
   title: string;
   description: string;

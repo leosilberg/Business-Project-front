@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { io } from "socket.io-client";
 import AddReviewForm from "../Components/BussinessDetails/AddReviewForm.tsx";
 import ReviewItem from "../Components/BussinessDetails/ReviewItem.tsx";
 import { Button } from "../Components/ui/button.tsx";
@@ -28,11 +27,8 @@ import { useAuth } from "../Context/AuthContext";
 import { useSnackBar } from "../Context/SnackBarContext";
 import { BusinessesService } from "../services/business.service";
 import { ReviewsService } from "../services/review.service";
+import { socket } from "../services/sockets.ts";
 import { BussinessI, ReviewI } from "../Types/Businesses.types";
-
-const socket = io("http://localhost:3000", {
-  query: { businessId: location.pathname.split("/").pop() },
-});
 
 function BussinessDetailsPage() {
   const [business, setBusiness] = useState<BussinessI | null | undefined>(null);
@@ -90,32 +86,37 @@ function BussinessDetailsPage() {
       }
     }
     handleGetBusiness();
-    socket.on("connect", () => {
-      console.log(`BussinessDetailsPage: connected `);
-    });
+  }, []);
 
-    socket.on("editReview", (updatedReview, updatedBusiness) => {
-      setBusiness(updatedBusiness);
-      setReviews((prev) => {
-        return prev.map((review) =>
-          review._id === updatedReview._id ? updatedReview : review
-        );
+  useEffect(() => {
+    if (business) {
+      socket.on(business._id, (updatedBusiness) => {
+        setBusiness(updatedBusiness);
       });
-    });
-    socket.on("addReview", (newReview, updatedBusiness) => {
-      setBusiness(updatedBusiness);
-      setReviews((prev) => [newReview, ...prev]);
-    });
-    socket.on("deleteReview", (delReview, updatedBusiness) => {
-      setBusiness(updatedBusiness);
-      setReviews((prev) => {
-        return prev.filter((review) => review._id !== delReview._id);
+
+      socket.emit("joinBusiness", business._id);
+
+      socket.on("editReview", (updatedReview) => {
+        setReviews((prev) => {
+          return prev.map((review) =>
+            review._id === updatedReview._id ? updatedReview : review
+          );
+        });
       });
-    });
+      socket.on("addReview", (newReview) => {
+        setReviews((prev) => [newReview, ...prev]);
+      });
+      socket.on("deleteReview", (delReview) => {
+        setReviews((prev) => {
+          return prev.filter((review) => review._id !== delReview._id);
+        });
+      });
+    }
     return () => {
+      business && socket.emit("leaveBusiness", business._id);
       socket.removeAllListeners();
     };
-  }, []);
+  }, [business]);
 
   function validateLoggedInUser() {
     if (!loggedInUser) {

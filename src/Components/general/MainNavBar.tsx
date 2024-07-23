@@ -6,12 +6,12 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { DropdownMenuCheckboxItem } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { AvatarDemo } from "../ui/AvatarDemo";
-import { MyDropDownMenu } from "../ui/myDropDownMenu";
 import { useAuth } from "../../Context/AuthContext";
+import { AvatarDemo } from "../ui/AvatarDemo";
+import { Button } from "../ui/button";
+import { DropdownMenuCheckboxItem } from "../ui/dropdown-menu";
 import { ModeToggle } from "../ui/mode-toggle";
+import { MyDropDownMenu } from "../ui/myDropDownMenu";
 // import { ModeToggle } from "../ui/ModeToggle";
 
 export default function MainNavBar() {
@@ -50,7 +50,7 @@ export default function MainNavBar() {
                   dropDownItems={[
                     <DropdownMenuCheckboxItem className="">
                       <Link to="/user" className=" flex gap-2 items-center">
-                        <span>User Place</span>
+                        <span>Profile</span>
                         <User className="text-primary" size={16} />
                       </Link>
                     </DropdownMenuCheckboxItem>,
