@@ -1,19 +1,22 @@
 import { Star } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSnackBar } from "../../Context/SnackBarContext";
-import { BussinessI, NewReviewI } from "../../Types/Businesses.types";
+import { AddReviewFormProps } from "../../Types/BusinessDetails.types";
+import { NewReviewI } from "../../Types/Businesses.types";
+import { ReviewsService } from "../../services/review.service";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { AddReviewFormProps } from "../../Types/BusinessDetails.types";
-import { ReviewsService } from "../../services/review.service";
 
 function AddReviewForm({
-  setBusiness,
   businessID,
   setOpenReviewForm,
+  currentReview,
 }: AddReviewFormProps) {
   const { displaySnackBar } = useSnackBar();
   const [selectedReviewValue, setSelectedReviewValue] = useState<number>(1);
+  useEffect(() => {
+    currentReview?.rating && setSelectedReviewValue(currentReview.rating);
+  }, [currentReview]);
   const [hoverReviewValues, setHoverReviewValues] = useState<number>(0);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
   const descriptionInputRef = useRef<HTMLInputElement | null>(null);
@@ -46,13 +49,10 @@ function AddReviewForm({
   }
 
   function resetForm(ev: React.FormEvent<HTMLFormElement>) {
-    setSelectedReviewValue(1);
     displaySnackBar({
       label: "Your review added successfully",
     });
     setOpenReviewForm(false);
-    const form = ev.target as HTMLFormElement;
-    form.reset();
   }
 
   async function handleSubmitForm(ev: React.FormEvent<HTMLFormElement>) {
@@ -79,19 +79,12 @@ function AddReviewForm({
       rating: selectedReviewValue,
     };
 
-
     try {
-      const savedReview = await ReviewsService.createReview(
-        newReview,
-        businessID
-      );
-      setBusiness((prev: BussinessI | null | undefined) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          reviews: prev.reviews ? [savedReview, ...prev.reviews] : undefined,
-        };
-      });
+      if (currentReview) {
+        await ReviewsService.editReview(currentReview._id, newReview);
+      } else {
+        await ReviewsService.createReview(newReview, businessID);
+      }
       resetForm(ev);
     } catch (error) {
       displaySnackBar({
@@ -109,18 +102,27 @@ function AddReviewForm({
       onSubmit={handleSubmitForm}
     >
       <div className=" flex flex-col gap-2">
-        <Input ref={titleInputRef} name="title" placeholder="Title...*" />
+        <Input
+          ref={titleInputRef}
+          name="title"
+          placeholder="Title...*"
+          defaultValue={currentReview?.title}
+        />
         <Input
           ref={descriptionInputRef}
           name="description"
           placeholder="Review...*"
+          defaultValue={currentReview?.description}
         />
-        <div className="flex gap-1 justify-center ">
+        <div className="flex gap-1 justify-center">
           {starsArr.map((value) => {
             return (
               <Star
                 key={value}
-                color={markedStar >= value ? "#eeff00" : "#ffffff"}
+                color="#eeff00"
+                className={
+                  markedStar >= value ? "fill-[#eeff00]" : "fill-background"
+                }
                 cursor={"pointer"}
                 size={18}
                 onMouseEnter={() => handleStarHover(value)}

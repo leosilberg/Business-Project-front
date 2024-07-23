@@ -1,3 +1,4 @@
+import { SelectOptionsProps } from "../../Types/UI_Components.types";
 import {
   Select,
   SelectContent,
@@ -6,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
-import { SelectOptionsProps } from "../../Types/UI_Components.types";
 
 export function SelectOptions(props: SelectOptionsProps) {
   const {
@@ -15,12 +15,17 @@ export function SelectOptions(props: SelectOptionsProps) {
     children,
     selectName,
     curValue,
+    className,
     onValueChange,
   } = props;
   return (
-    <Select onValueChange={onValueChange} name={selectName}>
-      <SelectTrigger className="min-w-40 ">
-        <SelectValue placeholder={curValue || selectValuePlaceholder || ""} />
+    <Select
+      onValueChange={onValueChange}
+      name={selectName}
+      defaultValue={curValue}
+    >
+      <SelectTrigger className={`min-w-40 ${className}`}>
+        <SelectValue placeholder={selectValuePlaceholder || ""} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

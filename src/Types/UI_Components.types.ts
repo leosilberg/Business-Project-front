@@ -30,6 +30,7 @@ export interface SelectOptionsProps {
   selectValuePlaceholder: string;
   curValue?: string;
   children: ReactNode;
+  className?: string;
   onValueChange?: (value: string) => void;
 }
 

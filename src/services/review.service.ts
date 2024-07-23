@@ -60,7 +60,7 @@ async function deleteReview(reviewId: string): Promise<string> {
 
 async function editReview(
   reviewId: string,
-  changes: Partial<ReviewI>
+  changes: NewReviewI
 ): Promise<ReviewI> {
   try {
     const { data } = await api.patch<ReviewI>(`review/${reviewId}`, changes);
