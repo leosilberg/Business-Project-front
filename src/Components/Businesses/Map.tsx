@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { API_KEY, Map1_ID } from "../../secret";
 import {
   APIProvider,
   Map,
@@ -12,6 +11,7 @@ import { BussinessI } from "../../Types/Businesses.types";
 import { BusinessesMapProps, BusinessMarkerI } from "../../Types/Maps.types";
 import { useNavigate } from "react-router-dom";
 import { BusinessesService } from "../../services/business.service";
+import { API_KEY, Map1_ID } from "@/secret";
 
 export default function BusinessesMap({ businessesList }: BusinessesMapProps) {
   const { loaded, position, error } = useGeoLocation();
@@ -69,6 +69,8 @@ export default function BusinessesMap({ businessesList }: BusinessesMapProps) {
   return (
     <APIProvider apiKey={API_KEY}>
       <div className=" h-full">
+        {!loaded && <p>Loading Map ... </p>}
+
         {loaded && !error && (
           <Map defaultZoom={9} defaultCenter={position} mapId={Map1_ID}>
             <AdvancedMarker position={position}>
