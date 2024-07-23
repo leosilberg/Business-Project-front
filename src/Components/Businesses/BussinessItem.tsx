@@ -24,8 +24,8 @@ function BussinessItem({ bussiness }: BussinessItemProps) {
           <div className=" flex gap-2 items-center">
             <CardTitle className=" text-primary">{bussiness.name}</CardTitle>
             <div className=" flex items-center gap-1">
-              {bussiness.avgRating.toFixed(1)}
-              <Star size={16} color="#fff700" />
+              {bussiness.avgRating}
+              <Star size={16} className=" text-yellow-400" />
             </div>
           </div>
           <CardDescription>{bussiness.about}</CardDescription>

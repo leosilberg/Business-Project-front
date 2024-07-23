@@ -29,6 +29,7 @@ import { useSnackBar } from "../Context/SnackBarContext";
 import { BusinessesService } from "../services/business.service";
 import { ReviewsService } from "../services/review.service";
 import { BussinessI, ReviewI } from "../Types/Businesses.types";
+import BusinessMap from "../Components/BussinessDetails/BusinessMap.tsx";
 
 const socket = io("http://localhost:3000", {
   query: { businessId: location.pathname.split("/").pop() },
@@ -45,6 +46,7 @@ function BussinessDetailsPage() {
   const { loggedInUser } = useAuth();
   const [sortBy, setSortBy] = useState("rating");
   const [sortOrder, setSortOrder] = useState(-1);
+
   function sortReview(a: ReviewI, b: ReviewI) {
     switch (sortBy) {
       case "likes":
@@ -73,7 +75,6 @@ function BussinessDetailsPage() {
         if (bussinessID) {
           const businessRes = await BusinessesService.getBusiness(bussinessID);
           const reviews = await ReviewsService.getReviews(businessRes._id);
-          console.log(reviews);
           setBusiness(businessRes);
           setReviews(reviews);
         } else {
@@ -133,12 +134,18 @@ function BussinessDetailsPage() {
   return (
     <div className=" mt-10 flex flex-col items-center justify-center">
       {business && (
-        <Card className=" w-full max-w-500">
+        <div className=" min-h-96 w-full">
+          <BusinessMap business={business} />
+        </div>
+      )}
+      {business && (
+        <Card className=" w-full max-w-400">
           <CardHeader>
             <div className=" flex gap-2 items-center">
               <CardTitle className=" text-primary">{business.name}</CardTitle>
               <div className=" flex text-lg items-center gap-1">
-                {business.avgRating} <Star size={20} color="#fff700" />
+                {business.avgRating}{" "}
+                <Star size={20} className=" text-yellow-400" />
               </div>
             </div>
             <CardDescription className=" text-base">

@@ -23,11 +23,11 @@ export default function MainNavBar() {
   const { logoutUser, loggedInUser } = useAuth();
   return (
     <>
-      <nav className=" z-40 font-montserrat sticky top-0 mb-4 px-6 py-4 shadow-md bg-background dark:border-b dark:border-gray-200">
+      <nav className=" z-40 font-montserrat sticky top-0 mb-4 px-6 py-4 shadow-md bg-background dark:border-b dark:border-gray-200 break-950px:px-16">
         <ul className=" flex gap-2 justify-between items-center">
           <li>
             <Link className=" text-xl font-semibold text-primary" to="/">
-              Brand
+              ReviewHub
             </Link>
           </li>
           <li className=" flex items-center gap-2">

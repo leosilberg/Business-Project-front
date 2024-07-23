@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { LocationI } from "../Types/MapTypes";
-
-
+import { LocationI } from "../Types/Maps.types";
 
 function useGeoLocation() {
   const [location, setLocation] = useState<LocationI>({
