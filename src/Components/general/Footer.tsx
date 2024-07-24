@@ -18,9 +18,9 @@ function Footer() {
       <Separator className="mt-20" />
       <div className=" space-y-2 py-6 px-6 break-950px:px-16 bg-muted">
         <div className=" flex flex-col h-full min-h-32 justify-center gap-8">
-          <h3 className=" text-center text-2xl font-bold text-primary">
+          <Link to="/" className=" text-center text-2xl font-bold text-primary">
             ReviewHub
-          </h3>
+          </Link>
           <div className=" flex flex-col gap-2 break-600px:flex-row break-600px:justify-center break-600px:gap-10 ">
             <div className="cursor-pointer flex gap-4">
               <Phone />

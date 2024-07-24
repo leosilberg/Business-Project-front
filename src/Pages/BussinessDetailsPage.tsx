@@ -133,14 +133,14 @@ function BussinessDetailsPage() {
   }
 
   return (
-    <div className=" mt-10 flex flex-col items-center justify-center">
+    <div className=" h-full mt-10 flex items-center justify-center break-700px:grid break-700px:grid-cols-2 break-700px:gap-4">
       {business && (
-        <div className=" min-h-96 w-full">
+        <div className=" hidden break-700px:block h-full">
           <BusinessMap business={business} />
         </div>
       )}
       {business && (
-        <Card className=" w-full max-w-400">
+        <Card className=" w-full ">
           <CardHeader>
             <div className=" flex gap-2 items-center">
               <CardTitle className=" text-primary">{business.name}</CardTitle>

@@ -9,8 +9,13 @@ import { Card } from "../Components/ui/card";
 import { BusinessesService } from "../services/business.service";
 import { socket } from "../services/sockets.ts";
 import { BussinessI } from "../Types/Businesses.types";
+import { OctagonAlert } from "lucide-react";
 
 function BusinessesPage() {
+  const [fetchParams, setFetchParams] = useState({
+    attempt: false,
+    loader: false,
+  });
   const [businessesList, setBusinessesList] = useState<BussinessI[] | []>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
@@ -34,6 +39,7 @@ function BusinessesPage() {
 
   useEffect(() => {
     async function getAllBusinesses() {
+      setFetchParams({ attempt: true, loader: true });
       if (searchParams.get("page") && Number(searchParams.get("page")) < 1)
         return;
       try {
@@ -43,6 +49,8 @@ function BusinessesPage() {
         setBusinessesList(businesses);
       } catch (error) {
         console.error(error);
+      } finally {
+        setFetchParams({ attempt: true, loader: true });
       }
     }
     getAllBusinesses();
@@ -57,19 +65,28 @@ function BusinessesPage() {
             setBusinessesList={setBusinessesList}
           />
         </Card>
-        <Card className=" border-0 hidden break-700px:block pb-10">
-          <BusinessesMap businessesList={businessesList} />
-        </Card>
-        <Card className=" border-0 pb-10 flex flex-col gap-4">
-          <BusinessesLayout businessesList={businessesList} />
-          {totalPagesRef.current && (
-            <PaginationLayout
-              totalPagesRef={totalPagesRef}
-              searchParams={searchParams}
-              setSearchParams={setSearchParams}
-            />
-          )}
-        </Card>
+        {businessesList.length > 0 && fetchParams.attempt ? (
+          <>
+            <Card className=" border-0 hidden break-700px:block pb-10">
+              <BusinessesMap businessesList={businessesList} />
+            </Card>
+            <Card className=" border-0 pb-10 flex flex-col gap-4">
+              <BusinessesLayout businessesList={businessesList} />
+              {totalPagesRef.current && (
+                <PaginationLayout
+                  totalPagesRef={totalPagesRef}
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                />
+              )}
+            </Card>
+          </>
+        ) : (
+          <div className="break-700px:col-span-2 flex gap-2 justify-center">
+            <p>Businesses wasnt matched </p>
+            <OctagonAlert className=" text-red-400" />
+          </div>
+        )}
       </div>
     </>
   );
