@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }: ChildrenPropsI) => {
   function logoutUser() {
     setToken(null);
     setLoggedInUser(null);
+    navigate("/");
   }
 
   async function loginUser(userData: LoginUserDataI) {

@@ -29,7 +29,10 @@ export default function MainNavBar() {
             <Link className=" text-xl font-semibold text-primary" to="/">
               ReviewHub
             </Link>
-            <Link to={"/businesses"} className="font-semibold text-primary">
+            <Link
+              to={"/businesses"}
+              className="font-semibold text-primary hidden break-600px:inline"
+            >
               Businesses
             </Link>
           </li>
@@ -82,7 +85,7 @@ export default function MainNavBar() {
                 />
               ) : (
                 <Link to="/auth" className="flex gap-2 items-center">
-                  <span>Sign In</span>
+                  <span className=" hidden break-400px:inline">Sign In</span>
                   <span className=" bg-gray-300 p-1 rounded-full">
                     <UserRoundCog
                       size={16}

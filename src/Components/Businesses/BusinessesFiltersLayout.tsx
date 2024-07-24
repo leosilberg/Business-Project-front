@@ -86,6 +86,8 @@ function BusinessesFiltersLayout({
       prev.delete("minRating");
       prev.delete("category");
       prev.delete("page");
+      prev.delete("sortBy");
+      prev.delete("sortOrder");
       return prev;
     });
   }

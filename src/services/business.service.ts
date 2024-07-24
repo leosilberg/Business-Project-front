@@ -3,36 +3,59 @@ import { BussinessI } from "../Types/Businesses.types.js";
 import api from "./api.js";
 import { API_KEY } from "../secret.js";
 
-async function getBusinesses(searchParams?: string): Promise<any> {
+async function getBusinesses(
+  searchParams?: string,
+  abortController?: AbortController
+): Promise<any> {
   try {
-    const { data } = await api.get<BussinessI[]>(`business/${searchParams}`);
+    const { data } = await api.get<BussinessI[]>(`business/${searchParams}`, {
+      signal: abortController?.signal,
+    });
     return data;
   } catch (error) {
     console.log(`business.service: `, error);
-    if (isAxiosError(error))
+    if (isAxiosError(error)) {
+      if (error.name === "CanceledError") {
+        throw "AbortError";
+      }
       throw error.response?.data ? error.response.data : error.message;
-    else throw (error as Error).message;
+    } else throw (error as Error).message;
   }
 }
 
-async function getBusiness(businessId: string): Promise<BussinessI> {
+async function getBusiness(
+  businessId: string,
+  abortController?: AbortController
+): Promise<BussinessI> {
   try {
     const { data: business } = await api.get<BussinessI>(
-      `business/${businessId}`
+      `business/${businessId}`,
+      {
+        signal: abortController?.signal,
+      }
     );
     return business;
   } catch (error) {
     console.log(`business.service: `, error);
-    if (isAxiosError(error))
+    if (isAxiosError(error)) {
+      if (error.name === "CanceledError") {
+        throw "AbortError";
+      }
       throw error.response?.data ? error.response.data : error.message;
-    else throw (error as Error).message;
+    } else throw (error as Error).message;
   }
 }
 
-async function getBusinessLocation(formmatedAddress: string) {
+async function getBusinessLocation(
+  formmatedAddress: string,
+  abortController?: AbortController
+) {
   try {
     const { data } = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${formmatedAddress}&key=${API_KEY}`
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${formmatedAddress}&key=${API_KEY}`,
+      {
+        signal: abortController?.signal,
+      }
     );
     const loc = data.results[0].geometry.location;
     return { data, loc };
@@ -41,12 +64,16 @@ async function getBusinessLocation(formmatedAddress: string) {
   }
 }
 
-async function createBusiness(form: FormData): Promise<string> {
+async function createBusiness(
+  form: FormData,
+  abortController?: AbortController
+): Promise<string> {
   try {
     const { data } = await api.post<string>("business", form, {
       headers: {
         "Content-Type": "application/json",
       },
+      signal: abortController?.signal,
     });
     return data;
   } catch (error) {
@@ -57,9 +84,14 @@ async function createBusiness(form: FormData): Promise<string> {
   }
 }
 
-async function deleteBusiness(businessId: string): Promise<string> {
+async function deleteBusiness(
+  businessId: string,
+  abortController?: AbortController
+): Promise<string> {
   try {
-    const { data } = await api.delete<string>(`business/${businessId}`);
+    const { data } = await api.delete<string>(`business/${businessId}`, {
+      signal: abortController?.signal,
+    });
     return data;
   } catch (error) {
     console.log(`business.service: `, error);
@@ -71,12 +103,16 @@ async function deleteBusiness(businessId: string): Promise<string> {
 
 async function editBusiness(
   businessId: string,
-  changes: Partial<BussinessI>
+  changes: Partial<BussinessI>,
+  abortController?: AbortController
 ): Promise<BussinessI> {
   try {
     const { data } = await api.patch<BussinessI>(
       `business/${businessId}`,
-      changes
+      changes,
+      {
+        signal: abortController?.signal,
+      }
     );
     return data;
   } catch (error) {
@@ -93,5 +129,5 @@ export const BusinessesService = {
   editBusiness,
   getBusiness,
   createBusiness,
-  getBusinessLocation
+  getBusinessLocation,
 };
