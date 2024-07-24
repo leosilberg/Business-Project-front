@@ -13,7 +13,8 @@ function ReviewItem(props: ReviewProps) {
 
   const likedReviewByUser = loggedInUser?.likedReviews.includes(curReview._id);
 
-  async function handleLikeClick() {
+  async function handleLikeClick(ev: React.MouseEvent<SVGSVGElement>) {
+    ev.stopPropagation();
     if (!loggedInUser) return navigate("/auth");
     try {
       await ReviewsService.likeReview(curReview._id);
@@ -22,7 +23,8 @@ function ReviewItem(props: ReviewProps) {
       console.error(error);
     }
   }
-  async function handleDislikeClick() {
+  async function handleDislikeClick(ev: React.MouseEvent<SVGSVGElement>) {
+    ev.stopPropagation();
     if (!loggedInUser) return navigate("/auth");
     try {
       await ReviewsService.removeLikeReview(curReview._id);
@@ -31,7 +33,8 @@ function ReviewItem(props: ReviewProps) {
       console.error(error);
     }
   }
-  async function deleteReview() {
+  async function deleteReview(ev: React.MouseEvent<HTMLButtonElement>) {
+    ev.stopPropagation();
     try {
       await ReviewsService.deleteReview(curReview._id);
     } catch (error) {
