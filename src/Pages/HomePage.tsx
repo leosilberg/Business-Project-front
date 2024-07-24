@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Button } from "../Components/ui/button";
-import { MyCarousel } from "../Components/ui/MyCarousel";
 
 function HomePage() {
   return (
