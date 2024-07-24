@@ -1,4 +1,5 @@
 import ReviewItem from "@/Components/BussinessDetails/ReviewItem.tsx";
+import { socket } from "@/services/sockets.ts";
 import { UsersService } from "@/services/user.service.ts";
 import { ReviewWithBusinessI } from "@/Types/Businesses.types.ts";
 import { useEffect, useState } from "react";
@@ -56,6 +57,30 @@ function UserPage() {
     loadUserReviews();
   }, []);
 
+  useEffect(() => {
+    if (loggedInUser) {
+      socket.emit("joinRoom", loggedInUser._id);
+
+      socket.on("editReview", (updatedReview) => {
+        setUserReviews((prev) => {
+          return prev.map((review) =>
+            review._id === updatedReview._id
+              ? { ...updatedReview, business: review.business }
+              : review
+          );
+        });
+      });
+      socket.on("deleteReview", (delReview) => {
+        setUserReviews((prev) => {
+          return prev.filter((review) => review._id !== delReview._id);
+        });
+      });
+    }
+    return () => {
+      loggedInUser && socket.emit("leaveRoom", loggedInUser._id);
+      socket.removeAllListeners();
+    };
+  }, [loggedInUser]);
   async function changePassword(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget);
