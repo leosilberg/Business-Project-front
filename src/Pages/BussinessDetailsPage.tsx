@@ -11,6 +11,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AddReviewForm from "../Components/BussinessDetails/AddReviewForm.tsx";
+import BusinessMap from "../Components/BussinessDetails/BusinessMap.tsx";
 import ReviewItem from "../Components/BussinessDetails/ReviewItem.tsx";
 import { Button } from "../Components/ui/button.tsx";
 import {
@@ -29,7 +30,6 @@ import { BusinessesService } from "../services/business.service";
 import { ReviewsService } from "../services/review.service";
 import { socket } from "../services/sockets.ts";
 import { BussinessI, ReviewI } from "../Types/Businesses.types";
-import BusinessMap from "../Components/BussinessDetails/BusinessMap.tsx";
 
 function BussinessDetailsPage() {
   const [business, setBusiness] = useState<BussinessI | null | undefined>(null);
@@ -95,7 +95,7 @@ function BussinessDetailsPage() {
         setBusiness(updatedBusiness);
       });
 
-      socket.emit("joinBusiness", business._id);
+      socket.emit("joinRoom", business._id);
 
       socket.on("editReview", (updatedReview) => {
         setReviews((prev) => {
@@ -114,7 +114,7 @@ function BussinessDetailsPage() {
       });
     }
     return () => {
-      business && socket.emit("leaveBusiness", business._id);
+      business && socket.emit("leaveRoom", business._id);
       socket.removeAllListeners();
     };
   }, [business]);

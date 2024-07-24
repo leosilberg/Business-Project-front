@@ -25,9 +25,12 @@ export default function MainNavBar() {
     <>
       <nav className=" z-40 font-montserrat sticky top-0 mb-4 px-6 py-4 shadow-md bg-background dark:border-b dark:border-gray-200 break-950px:px-16">
         <ul className=" flex gap-2 justify-between items-center">
-          <li>
+          <li className="flex gap-4 items-center">
             <Link className=" text-xl font-semibold text-primary" to="/">
               ReviewHub
+            </Link>
+            <Link to={"/businesses"} className="font-semibold text-primary">
+              Businesses
             </Link>
           </li>
           <li className=" flex items-center gap-2">
@@ -39,7 +42,7 @@ export default function MainNavBar() {
                 }}
               />
             )}
-            <div>
+            <div className="flex items-center">
               {loggedInUser ? (
                 <MyDropDownMenu
                   triggerElement={
