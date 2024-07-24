@@ -50,7 +50,6 @@ function UserPage() {
     async function loadUserReviews() {
       try {
         const data = await UsersService.getUserReviews();
-        console.log(`UserPage: `, data);
         setUserReviews(data);
       } catch (error) {}
     }

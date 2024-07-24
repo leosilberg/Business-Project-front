@@ -2,10 +2,16 @@ import { isAxiosError } from "axios";
 import { NewReviewI, ReviewI } from "../Types/Businesses.types.js";
 import api from "./api.js";
 
-async function getReviews(businessId: string): Promise<ReviewI[]> {
+async function getReviews(
+  businessId: string,
+  abortController?: AbortController
+): Promise<ReviewI[]> {
   try {
     const { data: reviews } = await api.get<ReviewI[]>(
-      `business/${businessId}/reviews`
+      `business/${businessId}/reviews`,
+      {
+        signal: abortController?.signal,
+      }
     );
     return reviews;
   } catch (error) {
@@ -16,9 +22,14 @@ async function getReviews(businessId: string): Promise<ReviewI[]> {
   }
 }
 
-async function getReview(reviewId: string): Promise<ReviewI> {
+async function getReview(
+  reviewId: string,
+  abortController?: AbortController
+): Promise<ReviewI> {
   try {
-    const { data: review } = await api.get<ReviewI>(`review/${reviewId}`);
+    const { data: review } = await api.get<ReviewI>(`review/${reviewId}`, {
+      signal: abortController?.signal,
+    });
     return review;
   } catch (error) {
     console.log(`reviews.service: `, error);
@@ -30,12 +41,16 @@ async function getReview(reviewId: string): Promise<ReviewI> {
 
 async function createReview(
   newReview: NewReviewI,
-  businessId: string
+  businessId: string,
+  abortController?: AbortController
 ): Promise<ReviewI> {
   try {
     const { data } = await api.post<ReviewI>(
       "review/business/" + businessId,
-      newReview
+      newReview,
+      {
+        signal: abortController?.signal,
+      }
     );
     return data;
   } catch (error) {
@@ -46,9 +61,14 @@ async function createReview(
   }
 }
 
-async function deleteReview(reviewId: string): Promise<string> {
+async function deleteReview(
+  reviewId: string,
+  abortController?: AbortController
+): Promise<string> {
   try {
-    const { data } = await api.delete<string>(`review/${reviewId}`);
+    const { data } = await api.delete<string>(`review/${reviewId}`, {
+      signal: abortController?.signal,
+    });
     return data;
   } catch (error) {
     console.log(`reviews.service: `, error);
@@ -60,10 +80,13 @@ async function deleteReview(reviewId: string): Promise<string> {
 
 async function editReview(
   reviewId: string,
-  changes: NewReviewI
+  changes: NewReviewI,
+  abortController?: AbortController
 ): Promise<ReviewI> {
   try {
-    const { data } = await api.patch<ReviewI>(`review/${reviewId}`, changes);
+    const { data } = await api.patch<ReviewI>(`review/${reviewId}`, changes, {
+      signal: abortController?.signal,
+    });
     return data;
   } catch (error) {
     console.log(`reviews.service: `, error);
@@ -73,9 +96,14 @@ async function editReview(
   }
 }
 
-async function likeReview(reviewId: string): Promise<ReviewI> {
+async function likeReview(
+  reviewId: string,
+  abortController?: AbortController
+): Promise<ReviewI> {
   try {
-    const { data } = await api.post<ReviewI>(`review/${reviewId}/like`);
+    const { data } = await api.post<ReviewI>(`review/${reviewId}/like`, {
+      signal: abortController?.signal,
+    });
     return data;
   } catch (error) {
     console.log(`reviews.service: `, error);
@@ -85,9 +113,14 @@ async function likeReview(reviewId: string): Promise<ReviewI> {
   }
 }
 
-async function removeLikeReview(reviewId: string): Promise<ReviewI> {
+async function removeLikeReview(
+  reviewId: string,
+  abortController?: AbortController
+): Promise<ReviewI> {
   try {
-    const { data } = await api.delete<ReviewI>(`review/${reviewId}/like`);
+    const { data } = await api.delete<ReviewI>(`review/${reviewId}/like`, {
+      signal: abortController?.signal,
+    });
     return data;
   } catch (error) {
     console.log(`reviews.service: `, error);

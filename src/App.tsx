@@ -42,10 +42,5 @@ function App() {
 export default App;
 
 // full crud on users review
-// sort the reviews - userFirst
-// add date to review
-// improve light layout
 
 // decide the layout after click a bussiness
-// filters
-// pagination

@@ -25,18 +25,27 @@ export default function BusinessesMap({ businessesList }: BusinessesMapProps) {
   });
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function fetchLocations(
       address: string,
       bussinessElement: BussinessI
     ) {
       try {
-        const { loc } = await BusinessesService.getBusinessLocation(address);
+        const { loc } = await BusinessesService.getBusinessLocation(
+          address,
+          abortController
+        );
         const newMarker: BusinessMarkerI = {
           location: loc,
           business: bussinessElement,
         };
         if (loc) setBusinessesMarkers((prev) => [...prev, newMarker]);
-      } catch (error) {
+      } catch (error: any) {
+        if (error.name === "CanceledError") {
+          // console.log("Map", "Abort");
+          return;
+        }
         console.error(error);
       }
     }
@@ -44,12 +53,14 @@ export default function BusinessesMap({ businessesList }: BusinessesMapProps) {
     if (businessesList) {
       for (let index = 0; index < businessesList.length; index++) {
         const element = businessesList[index];
+        // check about async loop.
         fetchLocations(`${element.city},${element.street}`, element);
       }
     }
     return () => {
       // must clean the state because the useEffect must run twice in order to track the changes in the bussinessList
       setBusinessesMarkers([]);
+      abortController.abort();
     };
   }, [businessesList]);
 
@@ -70,11 +81,22 @@ export default function BusinessesMap({ businessesList }: BusinessesMapProps) {
     <APIProvider apiKey={API_KEY}>
       <div className=" h-full">
         {!loaded && <p>Loading Map ... </p>}
-
         {loaded && !error && (
           <Map defaultZoom={9} defaultCenter={position} mapId={Map1_ID}>
             <AdvancedMarker position={position}>
-              <div className="h-5 w-5 bg-blue-700 border-2 border-white rounded-full"></div>
+              <div className=" relative">
+                <div
+                  className=" 
+                  rounded-full fixed top-0 left-0 right-0 bottom-0 h-6 w-6
+                  animate-pulse bg-blue-300 "
+                ></div>
+                <div
+                  className="
+                    fixed
+                    top-1 left-1 right-1 bottom-1
+                  z-50 h-4 w-4 bg-blue-700 border-2 border-white rounded-full"
+                ></div>
+              </div>
             </AdvancedMarker>
             {businessesMarkers.map((bsMarker, index) => {
               if (!bsMarker.location) return null;

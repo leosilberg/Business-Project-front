@@ -1,18 +1,8 @@
 "use client";
 
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  InfoWindow,
-} from "@vis.gl/react-google-maps";
+import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 import useGeoLocation from "../../hooks/useGeoLocation";
-import {
-  BusinessMapProps,
-  BusinessMarkerI,
-  LocationPositionI,
-} from "../../Types/Maps.types";
-import { Button } from "../ui/button";
+import { BusinessMapProps, BusinessMarkerI } from "../../Types/Maps.types";
 import { API_KEY, Map2_ID } from "@/secret";
 import { useEffect, useState } from "react";
 import { BusinessesService } from "@/services/business.service";
@@ -25,23 +15,35 @@ function BusinessMap({ business }: BusinessMapProps) {
   );
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function fetchLocation(
       address: string,
       bussinessElement: BussinessI
     ) {
       try {
-        const { loc } = await BusinessesService.getBusinessLocation(address);
+        const { loc } = await BusinessesService.getBusinessLocation(
+          address,
+          abortController
+        );
         const newMarker: BusinessMarkerI = {
           location: loc,
           business: bussinessElement,
         };
         if (loc) setBusinessMarker(newMarker);
-      } catch (error) {
+      } catch (error: any) {
+        if (error.name === "CanceledError") {
+          console.log("Business Map", "Aborted");
+          return;
+        }
         console.error(error);
       }
     }
 
     business && fetchLocation(`${business.city},${business.street}`, business);
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   return (
@@ -52,7 +54,19 @@ function BusinessMap({ business }: BusinessMapProps) {
           {loaded && !error && (
             <Map defaultZoom={9} defaultCenter={position} mapId={Map2_ID}>
               <AdvancedMarker position={position}>
-                <div className="h-5 w-5 bg-blue-700 border-2 border-white rounded-full"></div>
+                <div className=" relative">
+                  <div
+                    className=" 
+                  rounded-full fixed top-0 left-0 right-0 bottom-0 h-6 w-6
+                  animate-pulse bg-blue-300 "
+                  ></div>
+                  <div
+                    className="
+                    fixed
+                    top-1 left-1 right-1 bottom-1
+                  z-50 h-4 w-4 bg-blue-700 border-2 border-white rounded-full"
+                  ></div>
+                </div>
               </AdvancedMarker>
               {businessMarker?.location && (
                 <AdvancedMarker

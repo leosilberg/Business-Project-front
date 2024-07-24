@@ -55,6 +55,7 @@ function BussinessDetailsPage() {
         return 0;
     }
   }
+
   const userReview = useMemo(() => {
     return reviews.find((review) => review.userId === loggedInUser?._id);
   }, [reviews, loggedInUser]);
@@ -66,17 +67,26 @@ function BussinessDetailsPage() {
   }, [reviews, loggedInUser, sortBy, sortOrder]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function handleGetBusiness() {
       try {
         if (bussinessID) {
-          const businessRes = await BusinessesService.getBusiness(bussinessID);
+          const businessRes = await BusinessesService.getBusiness(
+            bussinessID,
+            abortController
+          );
           const reviews = await ReviewsService.getReviews(businessRes._id);
           setBusiness(businessRes);
           setReviews(reviews);
         } else {
           throw "There isnt business ID";
         }
-      } catch (error) {
+      } catch (error: any) {
+        if (error === "AbortError") {
+          console.log("Aborted");
+          return;
+        }
         console.error(`handleGetBusiness : ${error}`);
         displaySnackBar({
           label: "Internal Error",
@@ -87,6 +97,9 @@ function BussinessDetailsPage() {
       }
     }
     handleGetBusiness();
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   useEffect(() => {
@@ -133,14 +146,14 @@ function BussinessDetailsPage() {
   }
 
   return (
-    <div className=" h-full mt-10 flex items-center justify-center break-700px:grid break-700px:grid-cols-2 break-700px:gap-4">
+    <div className=" h-full mt-10 flex items-center justify-center break-800px:grid break-800px:grid-cols-2 break-800px:gap-4">
       {business && (
-        <div className=" hidden break-700px:block h-full">
+        <div className=" hidden break-800px:block h-full">
           <BusinessMap business={business} />
         </div>
       )}
       {business && (
-        <Card className=" w-full ">
+        <Card className=" w-full max-w-[600px] mx-auto ">
           <CardHeader>
             <div className=" flex gap-2 items-center">
               <CardTitle className=" text-primary">{business.name}</CardTitle>

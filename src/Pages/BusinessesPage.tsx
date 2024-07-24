@@ -38,22 +38,35 @@ function BusinessesPage() {
   }, [businessesList]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function getAllBusinesses() {
       setFetchParams({ attempt: true, loader: true });
       if (searchParams.get("page") && Number(searchParams.get("page")) < 1)
         return;
       try {
-        const res = await BusinessesService.getBusinesses(location.search);
+        const res = await BusinessesService.getBusinesses(
+          location.search,
+          abortController
+        );
         totalPagesRef.current = res.totalPages;
         const businesses = res.data;
         setBusinessesList(businesses);
       } catch (error) {
+        console.log(error);
+        if (error === "AbortError") {
+          console.log("BusinessPage", "Abort");
+          return;
+        }
+
         console.error(error);
       } finally {
         setFetchParams({ attempt: true, loader: true });
       }
     }
     getAllBusinesses();
+    return () => {
+      abortController.abort();
+    };
   }, [debouncedSearchParams]);
   return (
     <>

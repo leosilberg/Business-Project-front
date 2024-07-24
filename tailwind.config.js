@@ -72,6 +72,7 @@ module.exports = {
         "break-600px": "600px",
         "break-650px": "650px",
         "break-700px": "700px",
+        "break-800px": "800px",
         "break-850px": "850px",
         "break-950px": "950px",
         "break-1000px": "1000px",
